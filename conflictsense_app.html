@@ -1,0 +1,698 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:linear-gradient(135deg,#f8f7ff 0%,#ede9fe 50%,#f0f4ff 100%);min-height:100vh;color:var(--color-text-primary)}
+.page{display:none;min-height:100vh;padding:2rem 1rem}
+.page.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem}
+.card-sm{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:1rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:500}
+h1{font-size:22px;font-weight:500;margin-bottom:4px}
+h2{font-size:18px;font-weight:500;margin-bottom:1rem}
+h3{font-size:15px;font-weight:500;margin-bottom:8px}
+.sub{color:var(--color-text-secondary);font-size:14px;margin-bottom:1.5rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:13px;color:var(--color-text-secondary);margin-bottom:4px}
+input,select,textarea{width:100%;padding:9px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;font-family:inherit;background:var(--color-background-primary);color:var(--color-text-primary)}
+textarea{resize:vertical;min-height:80px}
+button{cursor:pointer;font-family:inherit;font-size:14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);padding:9px 20px;background:var(--color-background-primary);color:var(--color-text-primary);transition:background 0.15s}
+button:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#7F77DD;color:#fff;border-color:#7F77DD}
+.btn-primary:hover{background:#6c64cc}
+.btn-danger{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.btn-danger:hover{background:#c43b3a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.logo{font-size:26px;font-weight:500;color:#7F77DD;margin-bottom:4px}
+.logo-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:2rem}
+.otp-box{background:#f0f4ff;border:1px dashed #7F77DD;border-radius:var(--border-radius-md);padding:12px 20px;text-align:center;margin-bottom:1rem;font-size:18px;font-weight:500;color:#534AB7;letter-spacing:6px}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:var(--border-radius-md);font-weight:500}
+.badge-low{background:#EAF3DE;color:#3B6D11}
+.badge-med{background:#FAEEDA;color:#854F0B}
+.badge-high{background:#FCEBEB;color:#A32D2D}
+.badge-pending{background:#E6F1FB;color:#185FA5}
+.badge-resolved{background:#EAF3DE;color:#3B6D11}
+.progress-wrap{background:var(--color-background-secondary);border-radius:99px;height:8px;overflow:hidden;margin-top:4px}
+.progress-bar{height:100%;border-radius:99px;transition:width 0.5s}
+.bar-green{background:#639922}
+.bar-amber{background:#BA7517}
+.bar-red{background:#E24B4A}
+.bar-purple{background:#7F77DD}
+.nav{display:flex;align-items:center;gap:8px;margin-bottom:2rem;flex-wrap:wrap}
+.nav-step{font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:4px}
+.nav-step.done{color:#639922}
+.nav-step.active{color:#7F77DD;font-weight:500}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--color-border-secondary)}
+.nav-dot.done{background:#639922}
+.nav-dot.active{background:#7F77DD}
+.timeline{display:flex;flex-direction:column;gap:12px}
+.tl-item{display:flex;gap:12px;align-items:flex-start}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.tl-dot.done{background:#639922}
+.tl-dot.pend{background:#BA7517}
+.tl-dot.wait{background:var(--color-border-secondary)}
+.tl-text{font-size:13px}
+.tl-time{font-size:11px;color:var(--color-text-secondary)}
+.factor-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.factor-list li{font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.factor-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:#7F77DD;margin-top:5px;flex-shrink:0}
+.err{font-size:12px;color:#A32D2D;margin-top:4px}
+.file-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.file-chip{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:4px 10px;font-size:12px;color:var(--color-text-secondary)}
+.section-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;margin-top:1.5rem}
+.step-list{display:flex;flex-direction:column;gap:10px}
+.step-item{display:flex;gap:10px;align-items:center}
+.step-num{width:26px;height:26px;border-radius:50%;background:#EEEDFE;color:#534AB7;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-text{font-size:13px}
+.satisfaction-compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.slider-group{display:flex;flex-direction:column;gap:6px}
+.slider-val{font-size:20px;font-weight:500;color:#7F77DD}
+.verdict{border-radius:var(--border-radius-lg);padding:1.5rem;text-align:center;margin-top:1.5rem}
+.verdict-resolved{background:#EAF3DE;border:1px solid #97C459}
+.verdict-legal{background:#FCEBEB;border:1px solid #F09595}
+.verdict h2{font-size:20px;font-weight:500}
+.verdict .v-icon{font-size:32px;margin-bottom:8px}
+</style>
+
+<div id="app">
+
+<div id="page-login" class="page active">
+<div class="center">
+<div class="logo">ConflictSense</div>
+<div class="logo-sub">Intelligent Conflict Resolution System</div>
+<div class="card" style="width:100%;max-width:400px">
+<div id="login-step-1">
+<h2>Sign in</h2>
+<div class="field"><label>Email address</label><input type="email" id="login-email" placeholder="you@example.com"></div>
+<div id="login-err" class="err"></div>
+<button class="btn-primary" style="width:100%" onclick="sendOtp()">Continue</button>
+<p style="font-size:12px;color:var(--color-text-secondary);margin-top:12px;text-align:center">New user? Enter your email and we'll set up your account.</p>
+</div>
+<div id="login-step-2" style="display:none">
+<h2>Verify OTP</h2>
+<p class="sub" style="font-size:13px">A one-time code has been sent to your email.</p>
+<div class="otp-box" id="otp-display">------</div>
+<div class="field"><label>Enter OTP</label><input type="text" id="otp-input" placeholder="Enter 6-digit code" maxlength="6"></div>
+<div id="otp-err" class="err"></div>
+<button class="btn-primary" style="width:100%" onclick="verifyOtp()">Verify</button>
+</div>
+<div id="login-step-3" style="display:none">
+<h2>Set password</h2>
+<div class="field"><label>Password</label><input type="password" id="pw1" placeholder="Min 6 characters"></div>
+<div class="field"><label>Confirm password</label><input type="password" id="pw2" placeholder="Repeat password"></div>
+<div id="pw-err" class="err"></div>
+<button class="btn-primary" style="width:100%" onclick="setPassword()">Create account & continue</button>
+</div>
+<div id="login-step-returning" style="display:none">
+<h2>Welcome back</h2>
+<p class="sub" style="font-size:13px" id="returning-email"></p>
+<div class="field"><label>Password</label><input type="password" id="login-pw" placeholder="Enter password"></div>
+<div id="login-pw-err" class="err"></div>
+<button class="btn-primary" style="width:100%" onclick="loginReturning()">Sign in</button>
+<button style="width:100%;margin-top:8px" onclick="resetAccount()">Use different account</button>
+</div>
+</div>
+</div>
+</div>
+
+<div id="page-case" class="page">
+<div style="max-width:640px;margin:0 auto">
+<div class="nav" id="nav-case"></div>
+<h1>Create a case</h1>
+<p class="sub">Provide your details and describe the conflict you'd like resolved.</p>
+<div class="card">
+<h3>Personal information</h3>
+<div class="grid2">
+<div class="field"><label>First name *</label><input id="c-fname" placeholder="First name"></div>
+<div class="field"><label>Last name *</label><input id="c-lname" placeholder="Last name"></div>
+</div>
+<div class="grid2">
+<div class="field"><label>Email *</label><input type="email" id="c-email" placeholder="your@email.com"></div>
+<div class="field"><label>Phone *</label><input id="c-phone" placeholder="+91 00000 00000"></div>
+</div>
+<div class="field"><label>Organization name</label><input id="c-org" placeholder="Optional"></div>
+<div class="field"><label>Organization type</label>
+<select id="c-orgtype"><option value="">Select type</option><option>Individual</option><option>Startup</option><option>SME</option><option>Corporation</option><option>Government</option><option>NGO</option></select>
+</div>
+</div>
+<div class="card" style="margin-top:1rem">
+<h3>Case details</h3>
+<div class="field"><label>Query type *</label>
+<select id="c-qtype"><option value="">Select query type</option><option>Business Query</option><option>Customer Query</option><option>I Have a Case</option><option>Ongoing Disputes</option></select>
+</div>
+<div class="grid2">
+<div class="field"><label>City of residence *</label><input id="c-city-res" placeholder="Your city"></div>
+<div class="field"><label>City of case *</label><input id="c-city-case" placeholder="Where conflict occurred"></div>
+</div>
+<div class="field"><label>Case ID (optional)</label><input id="c-caseid" placeholder="If you have one"></div>
+<div class="field"><label>Describe your case *</label><textarea id="c-message" placeholder="Describe the situation, what happened, what resolution you seek..."></textarea></div>
+<div id="case-err" class="err"></div>
+<button class="btn-primary" style="margin-top:8px" onclick="submitCase()">Save & continue</button>
+</div>
+</div>
+</div>
+
+<div id="page-registerer" class="page">
+<div style="max-width:640px;margin:0 auto">
+<div class="nav" id="nav-reg"></div>
+<h1>Case registration</h1>
+<p class="sub">Provide your statement and evidence to support your case.</p>
+<div class="card">
+<h3>Your statement</h3>
+<div class="field"><label>Your opinion / position *</label><textarea id="r-opinion" placeholder="Describe your side of the conflict in detail. What happened from your perspective?"></textarea></div>
+<div class="field"><label>Evidence (text)</label><textarea id="r-evidence-text" placeholder="List any evidence, facts, or supporting details..."></textarea></div>
+<div class="field"><label>Evidence (files)</label>
+<input type="file" id="r-files" multiple accept="image/*,.pdf" onchange="previewFiles('r-files','r-preview')">
+<div class="file-preview" id="r-preview"></div>
+</div>
+</div>
+<div class="card" style="margin-top:1rem">
+<h3>Defendant details</h3>
+<div class="grid2">
+<div class="field"><label>Full name *</label><input id="r-def-name" placeholder="Defendant's name"></div>
+<div class="field"><label>Phone *</label><input id="r-def-phone" placeholder="Phone number"></div>
+</div>
+<div class="field"><label>Address *</label><input id="r-def-addr" placeholder="Defendant's address"></div>
+<div class="field"><label>Email</label><input type="email" id="r-def-email" placeholder="Optional"></div>
+<div id="reg-err" class="err"></div>
+<button class="btn-primary" style="margin-top:8px" onclick="submitRegisterer()">Submit case</button>
+</div>
+</div>
+</div>
+
+<div id="page-waiting" class="page">
+<div style="max-width:540px;margin:0 auto">
+<div class="nav" id="nav-wait"></div>
+<h1>Case submitted</h1>
+<p class="sub">Your case has been sent to the defendant.</p>
+<div class="card" style="text-align:center;padding:2rem">
+<div style="font-size:48px;margin-bottom:1rem">📬</div>
+<div id="wait-case-id" style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px"></div>
+<span class="badge badge-pending">Awaiting response</span>
+<p style="font-size:13px;color:var(--color-text-secondary);margin-top:1rem;line-height:1.6">The defendant has been notified. You will be informed once they respond. This typically takes 24–48 hours.</p>
+</div>
+<div class="card" style="margin-top:1rem">
+<h3>Case timeline</h3>
+<div class="timeline">
+<div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-text">Case created by registerer</div><div class="tl-time" id="tl-time-1"></div></div></div>
+<div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-text">Statement & evidence submitted</div><div class="tl-time" id="tl-time-2"></div></div></div>
+<div class="tl-item"><div class="tl-dot pend"></div><div><div class="tl-text">Notification sent to defendant</div><div class="tl-time">Just now</div></div></div>
+<div class="tl-item"><div class="tl-dot wait"></div><div><div class="tl-text">Awaiting defendant response</div><div class="tl-time">Pending</div></div></div>
+<div class="tl-item"><div class="tl-dot wait"></div><div><div class="tl-text">Conflict analysis &amp; decision</div><div class="tl-time">Pending</div></div></div>
+</div>
+</div>
+<button class="btn-primary" style="margin-top:1.5rem;width:100%" onclick="goTo('page-defendant')">Respond as defendant ↗</button>
+</div>
+</div>
+
+<div id="page-defendant" class="page">
+<div style="max-width:640px;margin:0 auto">
+<div class="nav" id="nav-def"></div>
+<h1>Defendant portal</h1>
+<p class="sub">Respond to the conflict claim filed against you.</p>
+<div class="card" id="def-case-summary" style="margin-bottom:1rem;background:#f8f7ff;border-color:#AFA9EC">
+<h3>Case summary</h3>
+<div id="def-summary-content" style="font-size:13px;color:var(--color-text-secondary);line-height:1.7"></div>
+</div>
+<div class="card">
+<h3>Your response</h3>
+<div class="grid2">
+<div class="field"><label>Your full name *</label><input id="d-name" placeholder="Your name"></div>
+<div class="field"><label>Your phone *</label><input id="d-phone" placeholder="Phone number"></div>
+</div>
+<div class="field"><label>Your opinion / position *</label><textarea id="d-opinion" placeholder="Describe your side of the situation..."></textarea></div>
+<div class="field"><label>Evidence (text)</label><textarea id="d-evidence-text" placeholder="Any supporting facts or context..."></textarea></div>
+<div class="field"><label>Evidence (files)</label>
+<input type="file" id="d-files" multiple accept="image/*,.pdf" onchange="previewFiles('d-files','d-preview')">
+<div class="file-preview" id="d-preview"></div>
+</div>
+<div id="def-err" class="err"></div>
+<button class="btn-primary" style="margin-top:8px" onclick="submitDefendant()">Submit response &amp; get decision</button>
+</div>
+</div>
+</div>
+
+<div id="page-result" class="page">
+<div style="max-width:700px;margin:0 auto">
+<div class="nav" id="nav-result"></div>
+<h1>Conflict analysis result</h1>
+<p class="sub">Rule-based decision generated from submitted evidence and statements.</p>
+<div class="grid2" style="margin-bottom:1rem">
+<div class="metric"><div class="metric-label">Case ID</div><div class="metric-val" id="res-caseid" style="font-size:14px;color:var(--color-text-secondary)">—</div></div>
+<div class="metric"><div class="metric-label">Status</div><div class="metric-val" id="res-status">—</div></div>
+</div>
+<div class="card" style="margin-bottom:1rem;border-left:3px solid #7F77DD;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0">
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">Final decision</div>
+<div id="res-decision" style="font-size:16px;font-weight:500;line-height:1.5"></div>
+</div>
+<div class="grid4" style="margin-bottom:1rem">
+<div class="metric"><div class="metric-label">Conflict level</div><div id="res-conflict-level" style="margin-top:4px"></div></div>
+<div class="metric"><div class="metric-label">Fairness score</div><div class="metric-val" id="res-fairness"></div></div>
+<div class="metric"><div class="metric-label">Risk score</div><div id="res-risk" style="margin-top:4px"></div></div>
+<div class="metric"><div class="metric-label">Confidence</div><div class="metric-val" id="res-confidence"></div></div>
+</div>
+<div class="card" style="margin-bottom:1rem">
+<h3>Satisfaction scores</h3>
+<div id="res-sat-wrap" style="display:flex;flex-direction:column;gap:14px;margin-top:8px"></div>
+</div>
+<div class="card" style="margin-bottom:1rem">
+<h3>Strategy steps</h3>
+<div class="step-list" id="res-steps"></div>
+</div>
+<div class="grid2" style="margin-bottom:1rem">
+<div class="card">
+<h3>Explanation</h3>
+<p id="res-explanation" style="font-size:13px;line-height:1.7;color:var(--color-text-secondary)"></p>
+</div>
+<div class="card">
+<h3>Influencing factors</h3>
+<ul class="factor-list" id="res-factors"></ul>
+</div>
+</div>
+<button class="btn-primary" style="width:100%" onclick="goTo('page-review')">Continue to review →</button>
+</div>
+</div>
+
+<div id="page-review" class="page">
+<div style="max-width:600px;margin:0 auto">
+<div class="nav" id="nav-review"></div>
+<h1>Satisfaction review</h1>
+<p class="sub">Rate actual satisfaction to compare with predicted scores.</p>
+<div class="satisfaction-compare" style="margin-bottom:1.5rem">
+<div class="card">
+<h3>Registerer</h3>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px">Predicted: <span id="rev-pred-r" style="font-weight:500;color:#7F77DD"></span></div>
+<div class="slider-group">
+<label style="font-size:13px;color:var(--color-text-secondary)">Actual satisfaction</label>
+<input type="range" min="0" max="100" value="50" step="1" id="rev-slider-r" oninput="updateSlider('r')">
+<div class="slider-val" id="rev-val-r">50</div>
+</div>
+</div>
+<div class="card">
+<h3>Defendant</h3>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px">Predicted: <span id="rev-pred-d" style="font-weight:500;color:#7F77DD"></span></div>
+<div class="slider-group">
+<label style="font-size:13px;color:var(--color-text-secondary)">Actual satisfaction</label>
+<input type="range" min="0" max="100" value="50" step="1" id="rev-slider-d" oninput="updateSlider('d')">
+<div class="slider-val" id="rev-val-d">50</div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-bottom:1rem">
+<h3>Predicted vs actual comparison</h3>
+<div id="rev-comparison" style="display:flex;flex-direction:column;gap:14px;margin-top:8px"></div>
+</div>
+<button class="btn-primary" style="width:100%" onclick="evaluateReview()">Evaluate resolution</button>
+<div id="rev-verdict"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+var state = {
+  user: null,
+  caseData: {},
+  registererData: {},
+  defendantData: {},
+  result: null,
+  caseId: null
+};
+
+var tempOtp = null;
+var tempEmail = null;
+
+function goTo(pid) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pid).classList.add('active');
+  window.scrollTo(0,0);
+  if(pid==='page-waiting') renderWaiting();
+  if(pid==='page-defendant') renderDefendantSummary();
+  if(pid==='page-result') renderResult();
+  if(pid==='page-review') renderReview();
+  renderNav(pid);
+}
+
+var STEPS = [
+  {id:'page-login',label:'Login'},
+  {id:'page-case',label:'Create case'},
+  {id:'page-registerer',label:'Register'},
+  {id:'page-waiting',label:'Waiting'},
+  {id:'page-defendant',label:'Defendant'},
+  {id:'page-result',label:'Results'},
+  {id:'page-review',label:'Review'}
+];
+
+function renderNav(current) {
+  var idx = STEPS.findIndex(s=>s.id===current);
+  var html = STEPS.slice(1).map((s,i)=>{
+    var si = i+1;
+    var cls = si < idx ? 'done' : si===idx ? 'active' : '';
+    return `<div class="nav-step ${cls}"><div class="nav-dot ${cls}"></div><span>${s.label}</span></div>${si<STEPS.length-1?'<span style="color:var(--color-border-secondary);font-size:12px">›</span>':''}`;
+  }).join('');
+  ['nav-case','nav-reg','nav-wait','nav-def','nav-result','nav-review'].forEach(id=>{
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = html;
+  });
+}
+
+function sendOtp() {
+  var email = document.getElementById('login-email').value.trim();
+  if(!email || !email.includes('@')) { document.getElementById('login-err').textContent='Please enter a valid email.'; return; }
+  document.getElementById('login-err').textContent='';
+  tempEmail = email;
+  var users = JSON.parse(localStorage.getItem('cs_users')||'{}');
+  if(users[email]) {
+    document.getElementById('login-step-1').style.display='none';
+    document.getElementById('login-step-returning').style.display='block';
+    document.getElementById('returning-email').textContent='Signing in as '+email;
+  } else {
+    tempOtp = Math.floor(100000+Math.random()*900000)+'';
+    document.getElementById('otp-display').textContent = tempOtp;
+    document.getElementById('login-step-1').style.display='none';
+    document.getElementById('login-step-2').style.display='block';
+  }
+}
+function verifyOtp() {
+  var val = document.getElementById('otp-input').value.trim();
+  if(val !== tempOtp) { document.getElementById('otp-err').textContent='Incorrect OTP. Try again.'; return; }
+  document.getElementById('otp-err').textContent='';
+  document.getElementById('login-step-2').style.display='none';
+  document.getElementById('login-step-3').style.display='block';
+}
+function setPassword() {
+  var p1=document.getElementById('pw1').value, p2=document.getElementById('pw2').value;
+  if(p1.length<6){document.getElementById('pw-err').textContent='Minimum 6 characters.';return;}
+  if(p1!==p2){document.getElementById('pw-err').textContent='Passwords do not match.';return;}
+  var users=JSON.parse(localStorage.getItem('cs_users')||'{}');
+  users[tempEmail]={password:p1};
+  localStorage.setItem('cs_users',JSON.stringify(users));
+  localStorage.setItem('cs_session',tempEmail);
+  state.user=tempEmail;
+  goTo('page-case');
+}
+function loginReturning() {
+  var users=JSON.parse(localStorage.getItem('cs_users')||'{}');
+  var pw=document.getElementById('login-pw').value;
+  if(users[tempEmail] && users[tempEmail].password===pw) {
+    localStorage.setItem('cs_session',tempEmail);
+    state.user=tempEmail;
+    goTo('page-case');
+  } else {
+    document.getElementById('login-pw-err').textContent='Incorrect password.';
+  }
+}
+function resetAccount() {
+  document.getElementById('login-step-returning').style.display='none';
+  document.getElementById('login-step-1').style.display='block';
+  document.getElementById('login-email').value='';
+}
+function checkSession() {
+  var sess=localStorage.getItem('cs_session');
+  if(sess) { state.user=sess; goTo('page-case'); }
+}
+
+function previewFiles(inputId, previewId) {
+  var files = document.getElementById(inputId).files;
+  var wrap = document.getElementById(previewId);
+  wrap.innerHTML='';
+  for(var i=0;i<files.length;i++) {
+    var chip=document.createElement('div');
+    chip.className='file-chip';
+    chip.textContent=files[i].name;
+    wrap.appendChild(chip);
+  }
+}
+
+function submitCase() {
+  var f=document.getElementById('c-fname').value.trim();
+  var l=document.getElementById('c-lname').value.trim();
+  var e=document.getElementById('c-email').value.trim();
+  var ph=document.getElementById('c-phone').value.trim();
+  var qt=document.getElementById('c-qtype').value;
+  var msg=document.getElementById('c-message').value.trim();
+  var cr=document.getElementById('c-city-res').value.trim();
+  var cc=document.getElementById('c-city-case').value.trim();
+  if(!f||!l||!e||!ph||!qt||!msg||!cr||!cc){document.getElementById('case-err').textContent='Please fill all required fields.';return;}
+  document.getElementById('case-err').textContent='';
+  state.caseId = document.getElementById('c-caseid').value.trim() || 'CS-'+Math.floor(1000+Math.random()*9000);
+  state.caseData={firstName:f,lastName:l,email:e,phone:ph,org:document.getElementById('c-org').value,orgType:document.getElementById('c-orgtype').value,queryType:qt,message:msg,cityRes:cr,cityCase:cc,caseId:state.caseId,timestamp:new Date().toLocaleTimeString()};
+  goTo('page-registerer');
+}
+
+function submitRegisterer() {
+  var op=document.getElementById('r-opinion').value.trim();
+  var dn=document.getElementById('r-def-name').value.trim();
+  var dp=document.getElementById('r-def-phone').value.trim();
+  var da=document.getElementById('r-def-addr').value.trim();
+  if(!op||!dn||!dp||!da){document.getElementById('reg-err').textContent='Please fill all required fields.';return;}
+  document.getElementById('reg-err').textContent='';
+  var files=document.getElementById('r-files').files;
+  state.registererData={opinion:op,evidenceText:document.getElementById('r-evidence-text').value,fileCount:files.length,defName:dn,defPhone:dp,defAddr:da,defEmail:document.getElementById('r-def-email').value};
+  goTo('page-waiting');
+}
+
+function renderWaiting() {
+  document.getElementById('wait-case-id').textContent='Case ID: '+(state.caseId||'—');
+  var now=new Date();
+  document.getElementById('tl-time-1').textContent=now.toLocaleTimeString();
+  document.getElementById('tl-time-2').textContent=now.toLocaleTimeString();
+}
+
+function renderDefendantSummary() {
+  var cd=state.caseData;
+  var rd=state.registererData;
+  if(!cd.firstName) return;
+  document.getElementById('def-summary-content').innerHTML=
+    '<b>Registerer:</b> '+cd.firstName+' '+cd.lastName+' &nbsp;|&nbsp; <b>Query:</b> '+cd.queryType+'<br>'+
+    '<b>Defendant:</b> '+rd.defName+'<br>'+
+    '<b>Case message:</b> '+cd.message;
+}
+
+function submitDefendant() {
+  var n=document.getElementById('d-name').value.trim();
+  var ph=document.getElementById('d-phone').value.trim();
+  var op=document.getElementById('d-opinion').value.trim();
+  if(!n||!ph||!op){document.getElementById('def-err').textContent='Please fill all required fields.';return;}
+  document.getElementById('def-err').textContent='';
+  state.defendantData={name:n,phone:ph,opinion:op,evidenceText:document.getElementById('d-evidence-text').value,fileCount:document.getElementById('d-files').files.length};
+  state.result = runConflictEngine();
+  goTo('page-result');
+}
+
+function runConflictEngine() {
+  var cd=state.caseData, rd=state.registererData, dd=state.defendantData;
+  var rOpinion = rd.opinion+' '+(rd.evidenceText||'');
+  var dOpinion = dd.opinion+' '+(dd.evidenceText||'');
+
+  var conflictScore = detectConflict(rOpinion, dOpinion, cd.message);
+  var conflictLevel = conflictScore >= 65 ? 'HIGH' : conflictScore >= 35 ? 'MEDIUM' : 'LOW';
+
+  var rEvidenceScore = scoreEvidence(rd.evidenceText||'', rd.fileCount||0);
+  var dEvidenceScore = scoreEvidence(dd.evidenceText||'', dd.fileCount||0);
+
+  var rWeight=1.0, dWeight=0.9;
+  var rCloseness = computeCloseness(rOpinion, cd.message);
+  var dCloseness = computeCloseness(dOpinion, cd.message);
+  var rRaw = rWeight*(rCloseness+rEvidenceScore);
+  var dRaw = dWeight*(dCloseness+dEvidenceScore);
+  var total = rRaw+dRaw || 1;
+  var rScore = Math.round((rRaw/total)*100);
+  var dScore = Math.round((dRaw/total)*100);
+
+  var diff = Math.abs(rScore - dScore);
+  if(diff > 30) {
+    var adj = (diff-30)*0.2;
+    if(rScore > dScore) { rScore=Math.round(rScore-adj); dScore=Math.round(dScore+adj); }
+    else { dScore=Math.round(dScore-adj); rScore=Math.round(rScore+adj); }
+  }
+  rScore=Math.min(100,Math.max(10,rScore));
+  dScore=Math.min(100,Math.max(10,dScore));
+
+  var rSat = Math.round((1/(1+Math.abs(rScore-dScore)*0.01))*100);
+  var dSat = Math.round((1/(1+Math.abs(dScore-rScore)*0.01))*100);
+  rSat=Math.min(100,Math.max(20,rSat));
+  dSat=Math.min(100,Math.max(20,dSat));
+
+  var variance = computeVariance([rSat,dSat]);
+  var fairness = Math.max(0,Math.round(100-variance));
+
+  var satGap = Math.abs(rSat-dSat);
+  var risk = Math.round(conflictScore*0.6 + satGap*0.4);
+  risk=Math.min(100,risk);
+  var riskLevel = risk>=65?'HIGH':risk>=35?'MEDIUM':'LOW';
+
+  var confidence = Math.round(100-(conflictScore*0.3+satGap*0.2));
+  confidence=Math.max(40,Math.min(95,confidence));
+
+  var decision = generateDecision(conflictLevel, rScore, dScore, cd.queryType);
+  var steps = generateSteps(conflictLevel);
+  var explanation = generateExplanation(conflictLevel, rScore, dScore, rEvidenceScore, dEvidenceScore, cd.queryType);
+  var factors = generateFactors(rEvidenceScore, dEvidenceScore, conflictScore, rCloseness, dCloseness, cd.queryType);
+
+  return {conflictScore,conflictLevel,rScore,dScore,rSat,dSat,fairness,risk,riskLevel,confidence,decision,steps,explanation,factors};
+}
+
+function detectConflict(r, d, msg) {
+  var highWords=['fraud','cheat','scam','steal','lie','fake','illegal','assault','threat','harass','sue','court','police','criminal','breach','void','refused','deny','block','lock','stolen'];
+  var medWords=['dispute','disagree','problem','issue','conflict','wrong','error','fail','unfair','misled','delay','damage','loss','unpaid','broken'];
+  var text=(r+' '+d+' '+msg).toLowerCase();
+  var score=30;
+  highWords.forEach(w=>{if(text.includes(w))score+=6});
+  medWords.forEach(w=>{if(text.includes(w))score+=3});
+  var sim = textSimilarity(r,d);
+  score += (100-sim)*0.2;
+  return Math.min(100,Math.round(score));
+}
+
+function textSimilarity(a, b) {
+  var wa=tokenize(a), wb=tokenize(b);
+  if(!wa.length||!wb.length) return 0;
+  var common=wa.filter(w=>wb.includes(w));
+  return Math.round((common.length/(Math.max(wa.length,wb.length)))*100);
+}
+
+function tokenize(s) {
+  return (s||'').toLowerCase().replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(w=>w.length>3);
+}
+
+function scoreEvidence(text, fileCount) {
+  var score=0;
+  var evidenceWords=['receipt','invoice','proof','contract','document','photo','screenshot','record','log','transaction','agreement','certificate','report','statement','bill','order','email','message','witness'];
+  var t=(text||'').toLowerCase();
+  evidenceWords.forEach(w=>{if(t.includes(w))score+=5});
+  score+=Math.min(20,Math.floor((text||'').length/50)*2);
+  score+=fileCount*10;
+  return Math.min(50,score);
+}
+
+function computeCloseness(opinion, caseMsg) {
+  var sim=textSimilarity(opinion,caseMsg);
+  return Math.round(sim*0.5);
+}
+
+function computeVariance(arr) {
+  var mean=arr.reduce((a,b)=>a+b,0)/arr.length;
+  var v=arr.reduce((a,b)=>a+Math.pow(b-mean,2),0)/arr.length;
+  return Math.round(v*0.5);
+}
+
+function generateDecision(level, rScore, dScore, queryType) {
+  if(level==='LOW') return 'Both parties have valid perspectives. Recommend direct mediated dialogue with neutral third-party facilitation to reach a mutually agreeable settlement.';
+  if(level==='MEDIUM') {
+    if(rScore>dScore) return 'Evidence and statements favour the registerer\'s position. A structured settlement negotiation is recommended, with the defendant acknowledging the stated grievances.';
+    return 'The defendant\'s response contains credible counter-claims. A supervised negotiation session is recommended, with the registerer reviewing the defendant\'s evidence before proceeding.';
+  }
+  return 'High-intensity conflict detected. Escalation to formal mediation or legal arbitration is strongly advised. Neither party should proceed independently without counsel.';
+}
+
+function generateSteps(level) {
+  var base=[
+    {num:1,text:'Contact both parties and share this conflict analysis report.',done:true},
+    {num:2,text:'Allow 72-hour window for voluntary settlement discussion.',done:true},
+    {num:3,text:'If unresolved, schedule structured mediation session.',done:level!=='LOW'},
+    {num:4,text:'Escalate to formal arbitration if mediation fails.',done:level==='HIGH'},
+    {num:5,text:'Pursue legal action as final resort.',done:false}
+  ];
+  return base;
+}
+
+function generateExplanation(level, rScore, dScore, rEv, dEv, queryType) {
+  var winner = rScore>=dScore ? 'registerer' : 'defendant';
+  var evNote = rEv>dEv ? 'The registerer provided stronger evidence support.' : dEv>rEv ? 'The defendant provided stronger counter-evidence.' : 'Both parties provided comparable evidence.';
+  return `This decision was reached by analysing opinion statements, evidence quality, and conflict intensity. The ${winner}'s position scored higher based on weighted scoring. ${evNote} Conflict intensity was rated ${level.toLowerCase()}, influencing the recommended resolution strategy. The fairness module adjusted scores to prevent one-sided outcomes.`;
+}
+
+function generateFactors(rEv, dEv, conflict, rClose, dClose, queryType) {
+  var f=[];
+  f.push('Conflict intensity score: '+conflict+'/100');
+  f.push('Registerer evidence quality: '+rEv+'/50');
+  f.push('Defendant evidence quality: '+dEv+'/50');
+  f.push('Registerer position relevance: '+rClose+'/50');
+  f.push('Defendant position relevance: '+dClose+'/50');
+  f.push('Query type classification: '+queryType);
+  f.push('Fairness adjustment applied to prevent score dominance');
+  f.push('Priority weights: Registerer 1.0 × Defendant 0.9');
+  return f;
+}
+
+function renderResult() {
+  var r=state.result;
+  if(!r) return;
+  document.getElementById('res-caseid').textContent=state.caseId||'—';
+  document.getElementById('res-status').innerHTML='<span class="badge badge-pending">Analysis complete</span>';
+  document.getElementById('res-decision').textContent=r.decision;
+  var clsBadge={'LOW':'badge-low','MEDIUM':'badge-med','HIGH':'badge-high'};
+  document.getElementById('res-conflict-level').innerHTML='<span class="badge '+clsBadge[r.conflictLevel]+'">'+r.conflictLevel+'</span>';
+  document.getElementById('res-fairness').textContent=r.fairness+'%';
+  document.getElementById('res-risk').innerHTML='<span class="badge '+clsBadge[r.riskLevel]+'">'+r.riskLevel+' ('+r.risk+')</span>';
+  document.getElementById('res-confidence').textContent=r.confidence+'%';
+
+  var satHtml='';
+  [[state.caseData.firstName+' '+state.caseData.lastName,'Registerer',r.rSat],[state.registererData.defName,'Defendant',r.dSat]].forEach(item=>{
+    var barCls=item[2]>=65?'bar-green':item[2]>=40?'bar-amber':'bar-red';
+    satHtml+=`<div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span><b>${item[0]}</b> <span style="color:var(--color-text-secondary)">(${item[1]})</span></span><span style="font-weight:500">${item[2]}%</span></div><div class="progress-wrap"><div class="progress-bar ${barCls}" style="width:${item[2]}%"></div></div></div>`;
+  });
+  document.getElementById('res-sat-wrap').innerHTML=satHtml;
+
+  var stepsHtml=r.steps.map(s=>`<div class="step-item"><div class="step-num">${s.num}</div><div class="step-text">${s.text}</div></div>`).join('');
+  document.getElementById('res-steps').innerHTML=stepsHtml;
+  document.getElementById('res-explanation').textContent=r.explanation;
+  document.getElementById('res-factors').innerHTML=r.factors.map(f=>`<li>${f}</li>`).join('');
+}
+
+function renderReview() {
+  var r=state.result;
+  if(!r) return;
+  document.getElementById('rev-pred-r').textContent=r.rSat+'%';
+  document.getElementById('rev-pred-d').textContent=r.dSat+'%';
+  document.getElementById('rev-slider-r').value=r.rSat;
+  document.getElementById('rev-slider-d').value=r.dSat;
+  document.getElementById('rev-val-r').textContent=r.rSat;
+  document.getElementById('rev-val-d').textContent=r.dSat;
+  renderComparison();
+}
+
+function updateSlider(who) {
+  var val=document.getElementById('rev-slider-'+who).value;
+  document.getElementById('rev-val-'+who).textContent=val;
+  renderComparison();
+}
+
+function renderComparison() {
+  var r=state.result; if(!r) return;
+  var rv=parseInt(document.getElementById('rev-slider-r').value);
+  var dv=parseInt(document.getElementById('rev-slider-d').value);
+  var html='';
+  [[state.caseData.firstName||'Registerer','Registerer',r.rSat,rv],[state.registererData.defName||'Defendant','Defendant',r.dSat,dv]].forEach(function(item){
+    var predBar=item[2]>=65?'bar-green':item[2]>=40?'bar-amber':'bar-red';
+    var actBar=item[3]>=65?'bar-green':item[3]>=40?'bar-amber':'bar-red';
+    html+=`<div><div style="font-size:13px;font-weight:500;margin-bottom:6px">${item[0]} (${item[1]})</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px">Predicted: ${item[2]}%</div>
+    <div class="progress-wrap" style="margin-bottom:4px"><div class="progress-bar ${predBar}" style="width:${item[2]}%"></div></div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px">Actual: ${item[3]}%</div>
+    <div class="progress-wrap"><div class="progress-bar ${actBar}" style="width:${item[3]}%"></div></div></div>`;
+  });
+  document.getElementById('rev-comparison').innerHTML=html;
+}
+
+function evaluateReview() {
+  var rv=parseInt(document.getElementById('rev-slider-r').value);
+  var dv=parseInt(document.getElementById('rev-slider-d').value);
+  var threshold=50;
+  var resolved = rv>=threshold && dv>=threshold;
+  var html='';
+  if(resolved) {
+    html=`<div class="verdict verdict-resolved"><div class="v-icon">✅</div><h2>Resolved</h2><p style="font-size:13px;color:#3B6D11;margin-top:8px">Both parties report satisfaction above the threshold. This conflict is marked as <b>Resolved</b>. No further action needed.</p></div>`;
+  } else {
+    html=`<div class="verdict verdict-legal"><div class="v-icon">⚖️</div><h2>Proceed to legal action</h2><p style="font-size:13px;color:#A32D2D;margin-top:8px">One or both parties remain unsatisfied. It is recommended to escalate this case to formal legal proceedings or certified arbitration.</p></div>`;
+  }
+  document.getElementById('rev-verdict').innerHTML=html;
+}
+
+checkSession();
+</script>
